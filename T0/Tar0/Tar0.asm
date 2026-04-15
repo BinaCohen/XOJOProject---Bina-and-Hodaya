@@ -1,24 +1,213 @@
-command: push segment static index 0
-command: pop segment local index 4
-command: gt
-counter: 1
-command: push segment constant index 7
-command: gt
-counter: 2
-command: pop segment this index 2
-command: push segment constant index 3
-command: add
-command: push segment argument index 1
-command: eq
-counter: 3
-command: pop segment that index 2
-command: push segment constant index 3
-command: lt
-counter: 1
-command: pop segment pointer index 1
-command: push segment constant index 43
-command: push segment local index 4
-command: neg
-command: sub
-command: eq
-counter: 2
+// push static 0
+@InputA.0
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// pop local 4
+@LCL
+D=M
+@4
+D=D+A
+@R13
+M=D
+@SP
+AM=M-1
+D=M
+@R13
+A=M
+M=D
+// gt
+@SP
+AM=M-1
+D=M
+A=A-1
+D=M-D
+@VM_TRUE_InputA_1
+D;JGT
+@SP
+A=M-1
+M=0
+@VM_END_InputA_1
+0;JMP
+(VM_TRUE_InputA_1)
+@SP
+A=M-1
+M=-1
+(VM_END_InputA_1)
+// push constant 7
+@7
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// gt
+@SP
+AM=M-1
+D=M
+A=A-1
+D=M-D
+@VM_TRUE_InputA_2
+D;JGT
+@SP
+A=M-1
+M=0
+@VM_END_InputA_2
+0;JMP
+(VM_TRUE_InputA_2)
+@SP
+A=M-1
+M=-1
+(VM_END_InputA_2)
+// pop this 2
+@THIS
+D=M
+@2
+D=D+A
+@R13
+M=D
+@SP
+AM=M-1
+D=M
+@R13
+A=M
+M=D
+// push constant 3
+@3
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// add
+@SP
+AM=M-1
+D=M
+A=A-1
+M=M+D
+// push argument 1
+@ARG
+D=M
+@1
+A=D+A
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// eq
+@SP
+AM=M-1
+D=M
+A=A-1
+D=M-D
+@VM_TRUE_InputA_3
+D;JEQ
+@SP
+A=M-1
+M=0
+@VM_END_InputA_3
+0;JMP
+(VM_TRUE_InputA_3)
+@SP
+A=M-1
+M=-1
+(VM_END_InputA_3)
+// pop that 2
+@THAT
+D=M
+@2
+D=D+A
+@R13
+M=D
+@SP
+AM=M-1
+D=M
+@R13
+A=M
+M=D
+// push constant 3
+@3
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// lt
+@SP
+AM=M-1
+D=M
+A=A-1
+D=M-D
+@VM_TRUE_InputB_1
+D;JLT
+@SP
+A=M-1
+M=0
+@VM_END_InputB_1
+0;JMP
+(VM_TRUE_InputB_1)
+@SP
+A=M-1
+M=-1
+(VM_END_InputB_1)
+// pop pointer 1
+@SP
+AM=M-1
+D=M
+@THAT
+M=D
+// push constant 43
+@43
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// push local 4
+@LCL
+D=M
+@4
+A=D+A
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// neg
+@SP
+A=M-1
+M=-M
+// sub
+@SP
+AM=M-1
+D=M
+A=A-1
+M=M-D
+// eq
+@SP
+AM=M-1
+D=M
+A=A-1
+D=M-D
+@VM_TRUE_InputB_2
+D;JEQ
+@SP
+A=M-1
+M=0
+@VM_END_InputB_2
+0;JMP
+(VM_TRUE_InputB_2)
+@SP
+A=M-1
+M=-1
+(VM_END_InputB_2)
