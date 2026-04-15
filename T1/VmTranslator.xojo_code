@@ -1,4 +1,6 @@
 #tag Module
+' Authors: Bina Cohen: 207562901 & Hodaya Levinstein: 213803729
+
 Public Module VmTranslator
 
 	#tag Method, Flags = &h0
