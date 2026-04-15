@@ -5,34 +5,33 @@ Public Module VmTranslator
 
 	#tag Method, Flags = &h0
 	Public Function RunInteractive() As Integer
-		Stdout.Write("Type the folder name (e.g. MemoryAccess or StackArithmetic) and press Enter: ")
+		Stdout.Write("Folder to translate (e.g. MemoryAccess or StackArithmetic): ")
 		Stdout.Flush
 
 		Var folderName As String = Input.Trim
 		If folderName = "" Then
-			Print("Error: folder name is empty.")
-			WaitForEnter("Press Enter to exit.")
+			Print("[ERROR] No folder name was entered.")
+			WaitForEnter("Press Enter to quit... ")
 			Return 1
 		End If
 
 		Var root As FolderItem = FindRootFolder(folderName)
 		If root Is Nil Then
-			Print("Error: Folder '" + folderName + "' not found!")
-			Print("CWD: " + If(SpecialFolder.CurrentWorkingDirectory <> Nil, SpecialFolder.CurrentWorkingDirectory.NativePath, "<nil>"))
-			Print("Exe: " + App.ExecutableFile.NativePath)
-			WaitForEnter("Press Enter to exit.")
+			Print("[ERROR] Folder not found: " + folderName)
+			Print("[INFO] Working dir: " + If(SpecialFolder.CurrentWorkingDirectory <> Nil, SpecialFolder.CurrentWorkingDirectory.NativePath, "<nil>"))
+			Print("[INFO] Executable:  " + App.ExecutableFile.NativePath)
+			WaitForEnter("Press Enter to quit... ")
 			Return 1
 		End If
 
-		Print("Scanning inside " + root.NativePath + " ...")
+		Print("[INFO] Scanning: " + root.NativePath)
 
 		Var translatedCount As Integer = 0
 		Var compareKey As Int64 = 0
 		TranslateRecursively(root, translatedCount, compareKey)
 
-		Print("======================================")
-		Print("Finished! Successfully translated " + translatedCount.ToString + " VM files.")
-		WaitForEnter("Press Enter to close window.")
+		Print("[OK] Done. Translated " + translatedCount.ToString + " .vm file(s).")
+		WaitForEnter("Press Enter to close... ")
 		Return 0
 	End Function
 	#tag EndMethod
@@ -90,7 +89,7 @@ Public Module VmTranslator
 
 				TranslateVmFile(item, compareKey)
 				translatedCount = translatedCount + 1
-				Print("Translated: " + item.Name)
+				Print("[OK] " + item.Name)
 			Next
 		Wend
 	End Sub
@@ -99,7 +98,7 @@ Public Module VmTranslator
 
 	#tag Method, Flags = &h21
 	Private Sub TranslateVmFile(vmFile As FolderItem, ByRef compareKey As Int64)
-		Var baseName As String = vmFile.Name.Left(vmFile.Name.Length - 3) // without ".vm"
+		Var baseName As String = vmFile.Name.Left(vmFile.Name.Length - 3) // filename without the .vm suffix
 		Var asmFile As FolderItem = vmFile.Parent.Child(baseName + ".asm")
 
 		Var input As TextInputStream = TextInputStream.Open(vmFile)
