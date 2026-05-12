@@ -1,0 +1,85 @@
+class Ball {
+    field int x;
+    field int y;
+    field int size;
+    field int dy;
+
+    constructor Ball new(int startX, int startY, int s, int deltaY) {
+        let x = startX;
+        let y = startY;
+        let size = s;
+        let dy = deltaY;
+        return this;
+    }
+
+    method int getX() {
+        return x;
+    }
+
+    method int getY() {
+        return y;
+    }
+
+    method int getSize() {
+        return size;
+    }
+
+    method void draw() {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x, y, (x + size), (y + size));
+        return;
+    }
+
+    method void erase() {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x, y, (x + size), (y + size));
+        return;
+    }
+
+    method void step() {
+        var int maxY;
+
+        let maxY = 255 - size;
+
+        if (((y > maxY) | (y = maxY))) {
+            return;
+        }
+
+        do erase();
+
+        let y = y + dy;
+        if ((y > maxY)) {
+            let y = maxY;
+        }
+
+        do draw();
+        return;
+    }
+
+    method void reset(int newX, int newY) {
+        var int maxY;
+
+        do erase();
+
+        let maxY = 255 - size;
+
+        let x = newX;
+        let y = newY;
+        if ((y > maxY)) {
+            let y = maxY;
+        }
+        do draw();
+        return;
+    }
+
+    method boolean isBelow(int bottomY) {
+        if (((y > bottomY) | (y = bottomY))) {
+            return true;
+        }
+        return false;
+    }
+
+    method void dispose() {
+        return;
+    }
+}

@@ -1,0 +1,30 @@
+CatchTheDot (nand2tetris Project 09)
+
+What it is:
+- Simple interactive game: move the paddle with Left/Right arrows.
+- Catch the falling square to increase score.
+- Miss it and score decreases. Game ends when score < -3.
+- Quit anytime by pressing Q (or q).
+
+How to run (standard nand2tetris flow):
+1) Copy this whole folder into your nand2tetris 'tools' directory.
+   Example: tools/CatchTheDot/
+
+2) Copy the OS VM files into the same folder:
+   Copy everything from tools/OS/*.vm into tools/CatchTheDot/
+   (Keyboard.vm, Screen.vm, Sys.vm, Output.vm, etc.)
+
+3) Compile the Jack files to VM:
+   - Windows: open cmd, cd into tools, run: JackCompiler.bat CatchTheDot
+   - macOS/Linux: from tools, run: ./JackCompiler.sh CatchTheDot
+
+4) Run in VMEmulator:
+   - Open VMEmulator
+   - Load Program -> select the CatchTheDot directory (not a single .vm file)
+   - Choose 'No Animation' and 'Screen'
+   - Run
+
+Controls:
+- Left Arrow: move left
+- Right Arrow: move right
+- Q: quit

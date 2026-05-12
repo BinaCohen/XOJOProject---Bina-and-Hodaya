@@ -1,0 +1,222 @@
+class Game {
+    field Paddle paddle;
+    field Ball ball;
+    field RNG rng;
+    field Scoreboard scoreboard;
+
+    field int score;
+    field boolean running;
+
+    constructor Game new() {
+        do Screen.clearScreen();
+
+        let score = 0;
+        let running = true;
+
+        let rng = RNG.new(1234);
+        let paddle = Paddle.new(230, 230, 60, 6);
+        let ball = Ball.new(50, 30, 6, 1);
+        let scoreboard = Scoreboard.new();
+
+        do scoreboard.draw(score);
+        do scoreboard.drawInstructions();
+
+        do paddle.draw();
+        do ball.draw();
+
+        return this;
+    }
+
+    method void run() {
+        var int key;
+        var int frames;
+        var boolean started;
+        var boolean armed;
+        var int candidateKey;
+        var int pressStable;
+        var int releaseStable;
+        var int heldKey;
+        var int holdTicks;
+        var int t;
+
+        let frames = 0;
+        let started = false;
+        let heldKey = 0;
+        let holdTicks = 0;
+        let armed = true;
+        let candidateKey = 0;
+        let pressStable = 0;
+        let releaseStable = 0;
+
+        while ((~started) & running) {
+            let key = Keyboard.keyPressed();
+            if ((key = 32)) {
+                let started = true;
+            } else {
+                if (((key = 81) | (key = 113))) {
+                    let running = false;
+                }
+            }
+            do Sys.wait(1);
+        }
+
+        while (running) {
+            let key = Keyboard.keyPressed();
+            if ((key = 0)) {
+                let pressStable = 0;
+                let candidateKey = 0;
+
+                if (releaseStable < 6) {
+                    let releaseStable = releaseStable + 1;
+                }
+
+                if (((releaseStable > 5) | (releaseStable = 5))) {
+                    let armed = true;
+                    let heldKey = 0;
+                    let holdTicks = 0;
+                }
+            } else {
+                let releaseStable = 0;
+
+                if (((key = 81) | (key = 113))) {
+                    do handleKey(key);
+                }
+
+                if (armed) {
+                    if ((key = candidateKey)) {
+                        let pressStable = pressStable + 1;
+                    } else {
+                        let candidateKey = key;
+                        let pressStable = 1;
+                    }
+
+                    if (((pressStable > 1) | (pressStable = 1))) {
+                        let armed = false;
+                        let heldKey = candidateKey;
+                        let holdTicks = 0;
+                        do handleKey(candidateKey);
+                    }
+                } else {
+                    if ((key = heldKey)) {
+                        let holdTicks = holdTicks + 1;
+
+                        if (((heldKey = 130) | (heldKey = 132))) {
+                            if (((holdTicks > 200) | (holdTicks = 200))) {
+                                let t = holdTicks - 200;
+                                if ((t - ((t / 100) * 100)) = 0) {
+                                    do handleKey(heldKey);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            let frames = frames + 1;
+            if ((frames > 25)) {
+                let frames = 0;
+                do step();
+            }
+
+            do Sys.wait(5);
+        }
+
+        return;
+    }
+
+    method void handleKey(int key) {
+        if ((key = 130)) {
+            do paddle.moveLeft();
+        } else {
+            if ((key = 132)) {
+                do paddle.moveRight();
+            } else {
+                if (((key = 81) | (key = 113))) {
+                    let running = false;
+                }
+            }
+        }
+
+        return;
+    }
+
+    method void step() {
+        var boolean caught;
+        var boolean missed;
+        var int nextX;
+
+        do ball.step();
+
+        let caught = ballHitPaddle();
+        let missed = ballMissed();
+
+        if (caught) {
+            let score = score + 1;
+            do scoreboard.draw(score);
+
+            let nextX = rng.nextInt(506);
+            do ball.reset(nextX, 20);
+        } else {
+            if (missed) {
+                let score = score - 1;
+                do scoreboard.draw(score);
+
+                let nextX = rng.nextInt(506);
+                do ball.reset(nextX, 20);
+
+                if ((score < -3)) {
+                    do scoreboard.drawGameOver();
+                    let running = false;
+                }
+            }
+        }
+
+        return;
+    }
+
+    method boolean ballHitPaddle() {
+        var int bx;
+        var int by;
+        var int bs;
+        var int px;
+        var int py;
+        var int pw;
+        var int ph;
+
+        let bx = ball.getX();
+        let by = ball.getY();
+        let bs = ball.getSize();
+
+        let px = paddle.getX();
+        let py = paddle.getY();
+        let pw = paddle.getWidth();
+        let ph = paddle.getHeight();
+
+        if ((((by + bs) > py) | ((by + bs) = py))) {
+            if ((((by + bs) < (py + ph)) | ((by + bs) = (py + ph)))) {
+                if ((((bx + bs) > px) | ((bx + bs) = px))) {
+                    if (((bx < (px + pw)) | (bx = (px + pw)))) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    method boolean ballMissed() {
+        if (ball.isBelow((255 - ball.getSize()))) {
+            return true;
+        }
+        return false;
+    }
+
+    method void dispose() {
+        do paddle.dispose();
+        do ball.dispose();
+        do rng.dispose();
+        do scoreboard.dispose();
+        return;
+    }
+}

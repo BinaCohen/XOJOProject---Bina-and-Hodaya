@@ -1,0 +1,24 @@
+class RNG {
+    field int value;
+
+    constructor RNG new(int start) {
+        let value = start;
+        return this;
+    }
+
+    method int nextInt(int bound) {
+        var int r;
+
+        let value = value + 201;
+        if (((value > 32767) | (value = 32767))) {
+            let value = value - 32767;
+        }
+
+        let r = value - ((value / bound) * bound);
+        return r;
+    }
+
+    method void dispose() {
+        return;
+    }
+}

@@ -1,0 +1,31 @@
+class Scoreboard {
+    constructor Scoreboard new() {
+        return this;
+    }
+
+    method void draw(int score) {
+        do Output.moveCursor(0, 0);
+        do Output.printString("Score: ");
+        do Output.printInt(score);
+        do Output.printString("     ");
+        return;
+    }
+
+    method void drawInstructions() {
+        do Output.moveCursor(1, 0);
+        do Output.printString("Left/Right arrows move. Press Q to quit.");
+        do Output.moveCursor(2, 0);
+        do Output.printString("Press SPACE to start.");
+        return;
+    }
+
+    method void drawGameOver() {
+        do Output.moveCursor(3, 0);
+        do Output.printString("Game Over (score < -3)");
+        return;
+    }
+
+    method void dispose() {
+        return;
+    }
+}
