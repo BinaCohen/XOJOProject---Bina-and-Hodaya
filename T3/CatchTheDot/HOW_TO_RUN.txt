@@ -1,5 +1,7 @@
 CatchTheDot (nand2tetris Project 09)
 
+Authors: Bina Cohen: 207562901 & Hodaya Levinstein: 213803729
+
 What it is:
 - Simple interactive game: move the paddle with Left/Right arrows.
 - Catch the falling square to increase score.
